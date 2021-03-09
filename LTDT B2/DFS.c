@@ -6,13 +6,13 @@ void depth_first_search(Graph *G)
     Stack L;
     int mark[MAX_VERTEXES];
     make_null_stack(&L);
-    /* Khởi tạo mark, chưa đỉnh nào được duyệt */
+
     int j;
     for (j = 1; j <= G->n; j++)
         mark[j] = 0;
-    /* Đưa 1 vào L, bắt đầu duyệt từ đỉnh 1 */
+
     push(&L, 1);
-    /* Vòng lặp chính dùng để duyệt */
+
     while (!empty(&L))
     {
         /* Lấy phần tử đầu tiên trong L ra */

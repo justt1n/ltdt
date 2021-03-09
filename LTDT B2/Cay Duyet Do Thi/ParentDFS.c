@@ -127,39 +127,43 @@ int empty(Stack *S)
 
 //BFS
 
-int Parent[MAX_ELEMENTS];
 int mark[MAX_VERTEXES];
 
-void depth_first_search(Graph *G, int a)
+void depth_first_search(Graph *G, int a, int Parent[])
 {
     Stack L;
-    int mark[100];
+    
     make_null_stack(&L);
     int j;
     push(&L, a);
-    Parent[a] = 0;
+   	Parent[a] = 0;
     while (!empty(&L))
     {
+       
         int x = top(&L);
         pop(&L);
-        if (mark[x] != 0)
+        if (mark[x] != 0) 
             continue;
-        mark[x] = 1;
+        mark[x] = 1; 
+        
         List list = neighbors(G, x);
+        
         for (j = 1; j <= list.size; j++)
         {
             int y = element_at(&list, j);
-            if (mark[y] == 0)
+            if(mark[y] == 0)
             {
-                push(&L, y);
-                Parent[y] = x;
+            	Parent[y] = x;
+            	push(&L, y);
             }
+    
         }
     }
 }
+
 int main()
 {
-    freopen("dt2.txt", "r", stdin); //Khi nộp bài nhớ bỏ dòng này.
+    freopen("dt2.txt", "r", stdin); 
     Graph G;
     int n, m, u, v, e;
     scanf("%d%d", &n, &m);
@@ -171,15 +175,16 @@ int main()
         add_edge(&G, u, v);
     }
     int j;
+    int Parent[MAX_ELEMENTS];
     for (j = 1; j <= G.n; j++)
         mark[j] = 0;
     for (j = 1; j <= G.n; j++)
         Parent[j] = -1;
-    depth_first_search(&G, 1);
+    depth_first_search(&G, 1, Parent);
 
-    // for (int i = 2; i <= G.n; i++)
-    //     if (mark[i] == 0)
-    //         depth_first_search(&G, i);
+    for (int i = 2; i <= G.n; i++)
+         if (mark[i] == 0)
+             depth_first_search(&G, i, Parent);
     for (int i = 1; i <= G.n; i++)
         printf("%d %d\n", i, Parent[i]);
     return 0;
