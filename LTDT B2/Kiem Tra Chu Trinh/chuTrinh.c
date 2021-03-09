@@ -1,105 +1,69 @@
-#include<stdio.h>
-
-#include<stdio.h>
+#include <stdio.h>
 #define MAX_ELEMENTS 100
+#define MAX_VERTEXES 100
+typedef int ElementType;
 typedef struct
 {
-    int data[MAX_ELEMENTS];
-    int size;
-} Stack;
-void make_null_stack(Stack *S)
-{
-    S->size = 0;
-}
-void push(Stack *S, int x)
-{
-    S->data[S->size] = x;
-    S->size++;
-}
-int top(Stack *S)
-{
-    return S->data[S->size - 1];
-}
-void pop(Stack *S)
-{
-    S->size--;
-}
-int empty(Stack *S)
-{
-    return S->size == 0;
-}
-#define MAX_ELEMENTS 100
-typedef int ElementType;
-typedef struct {
 	ElementType data[MAX_ELEMENTS];
 	int size;
 } List;
-/* Tao danh sach rong */
-void make_null(List* L) {
+// cac ham lien quan toi List
+void make_null(List *L)
+{
 	L->size = 0;
 }
-/* Them mot phan tu vao cuoi danh sach */
-void push_back(List* L, ElementType x) {
+void push_back(List *L, ElementType x)
+{
 	L->data[L->size] = x;
 	L->size++;
 }
-/* Lay phan tu tai vi tri i, phan tu bat dau o vi tri 1 */
-ElementType element_at(List* L, int i) {
-	return L->data[i-1];
+ElementType element_at(List *L, int i)
+{
+	return L->data[i - 1];
 }
-/* Tra ve so phan tu cua danh sach */
-int count_list(List* L) {
+int count_List(List *L)
+{
 	return L->size;
 }
-
-int member(List *L, int x)
-{
-	for(int i = 0; i < L->size; i++)
-		if(L->data[i] == x)
-			return 1;
-	return 0;
-}
-#define MAX_VERTEXES 100
 typedef struct
 {
-	int A[100][100];
+	int A[MAX_VERTEXES][MAX_VERTEXES];
 	int n;
 } Graph;
-
-void init_graph(Graph *pG, int n)
+void init_graph(Graph *G, int n)
 {
-	pG->n = n;
-	for (int i = 1; i <= n; i++)
-		for (int j = 1; j <= n; j++)
-			pG->A[i][j] = 0;
+	G->n = n;
+	int i, j;
+	for (i = 1; i <= G->n; i++)
+		for (j = 1; j <= G->n; j++)
+			G->A[i][j] = 0;
 }
-
-void add_edge(Graph *pG, int x, int y)
+void add_edge(Graph *G, int x, int y)
 {
-	pG->A[x][y] = 1;
+	G->A[x][y] = 1;
+	G->A[y][x] = 1;
 }
-
-int degree(Graph *pG, int x)
+int degree(Graph *G, int x)
 {
-	int deg = 0;
-	for (int i = 1; i <= pG->n; i++)
-		deg += pG->A[x][i];
+	int y, deg = 0;
+	for (y = 1; y <= G->n; y++)
+		if (G->A[x][y] > 0)
+			deg += 1;
 	return deg;
 }
-
-int adjacent(Graph *pG, int x, int y)
+int adjacent(Graph *G, int x, int y)
 {
-	return pG->A[x][y];
+	return G->A[x][y] != 0;
 }
-
-List neighbors(Graph *pG, int x)
+List neighbors(Graph *G, int x)
 {
-	List L;
-	make_null(&L);
-	for (int i = 1; i <= pG->n; i++)
-		if (adjacent(pG, x, i) == 1 && x != i)
-			push_back(&L, i);
-	return L;
+	int y;
+	List list;
+	make_null(&list);
+	for (y = 1; y <= G->n; y++)
+		if (adjacent(G, x, y))
+			push_back(&list, y);
+	return list;
 }
 
 void printM(Graph *pG)
@@ -112,46 +76,59 @@ void printM(Graph *pG)
 	}
 }
 
-#define WHITE 0
-#define GRAY 1
-#define BLACK 2
-
-int color[100];
-int cycle = 0;
-
-void visit(Graph *pG, int u)
+#define white 0
+#define black 1
+#define gray 2
+int color[MAX_VERTEXES];
+int cycle;
+void DFS(Graph *G, int x, int parent)
 {
-	color[u] = GRAY;
-	List list = neighbors(pG, u);
-	for (int i = 1; i <= list.size; i++)
+	color[x] = gray;
+	int j;
+	List list = neighbors(G, x);
+	for (j = 1; j <= list.size; j++)
 	{
-		if(color[i] == GRAY)
+		int y = element_at(&list, j);
+		if (y == parent)
+			continue;
+		if (color[y] == gray)
 		{
 			cycle = 1;
 			return;
 		}
-		if(color[i] == WHITE)
-			visit(pG, i);
+		if (color[y] == white)
+			DFS(G, y, x);
 	}
-	color[u] = BLACK;
+	color[x] = black;
 }
-
+int contain_cycle(Graph *G)
+{
+	int j;
+	for (j = 1; j <= G->n; j++)
+		color[j] = white;
+	cycle = 0;
+	for (j = 1; j <= G->n; j++)
+	{
+		if (color[j] == white)
+			DFS(G, j, 0);
+	}
+	return cycle;
+}
 int main()
 {
-	freopen("ctr1.txt", "r", stdin); 
+	freopen("ctr1.txt", "r", stdin);
 	Graph G;
 	int n, m, u, v, e;
 	scanf("%d%d", &n, &m);
 	init_graph(&G, n);
-	
-	for (e = 0; e < m; e++) {
+
+	for (e = 0; e < m; e++)
+	{
 		scanf("%d%d", &u, &v);
 		add_edge(&G, u, v);
 	}
-	for(int i = 1; i <= G.n; i++)
-		color[i] = WHITE;
-	visit(&G, 1);
-	if(cycle == 1)
+	printf("%d\n", contain_cycle(&G));
+	if (contain_cycle(&G))
 		printf("YES");
 	else
 		printf("NO");
