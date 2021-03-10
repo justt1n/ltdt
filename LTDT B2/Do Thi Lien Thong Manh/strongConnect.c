@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "Ma tran dinh dinh.c"
 #include "stack.c"
-int strong = 0;
 int num[100];
 int min_num[100];
 int on_stack[100];
@@ -35,14 +34,12 @@ void strong_connect(Graph *G, int x)
 	}
 	if (num[x] == min_num[x])
 	{
-		if (S.size == G->n)
-			strong = 1;
+		count++;
 		int w;
 		do
 		{
 			w = top(&S);
 			pop(&S);
-			count++;
 			on_stack[w] = 0;
 		} while (w != x);
 	}
@@ -50,7 +47,7 @@ void strong_connect(Graph *G, int x)
 
 int main()
 {
-	freopen("sc1.txt", "r", stdin);
+	freopen("sc2.txt", "r", stdin);
 	Graph G;
 	int n, m, u, v, e;
 	scanf("%d%d", &n, &m);
@@ -69,7 +66,7 @@ int main()
 	}
 	make_null_stack(&S);
 	strong_connect(&G, 1);
-	if (count == G.n * G.n)
+	if (count == 1)
 		printf("strong connected");
 	else
 		printf("unconnected");

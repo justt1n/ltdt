@@ -18,7 +18,7 @@ void init_graph(Graph *pG, int n)
 void add_edge(Graph *pG, int x, int y)
 {
 	pG->A[x][y] = 1;
-	//pG->A[y][x] = 1;
+	pG->A[y][x] = 1;
 }
 
 int degree(Graph *pG, int x)
