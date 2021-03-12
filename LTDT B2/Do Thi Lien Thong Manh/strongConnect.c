@@ -65,7 +65,9 @@ int main()
 		on_stack[i] = -1;
 	}
 	make_null_stack(&S);
-	strong_connect(&G, 1);
+	for (int i = 1; i <= G.n; i++)
+		if (num[i] < 0)
+			strong_connect(&G, i);
 	if (count == 1)
 		printf("strong connected");
 	else
