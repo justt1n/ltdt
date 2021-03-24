@@ -84,9 +84,8 @@ int cycle;
 void DFS(Graph *G, int x, int parent)
 {
 	color[x] = gray;
-	int j;
 	List list = neighbors(G, x);
-	for (j = 1; j <= list.size; j++)
+	for (int j = 1; j <= list.size; j++)
 	{
 		int y = element_at(&list, j);
 		if (y == parent)
@@ -103,11 +102,10 @@ void DFS(Graph *G, int x, int parent)
 }
 int contain_cycle(Graph *G)
 {
-	int j;
-	for (j = 1; j <= G->n; j++)
+	for (int j = 1; j <= G->n; j++)
 		color[j] = white;
 	cycle = 0;
-	for (j = 1; j <= G->n; j++)
+	for (int j = 1; j <= G->n; j++)
 	{
 		if (color[j] == white)
 			DFS(G, j, 0);

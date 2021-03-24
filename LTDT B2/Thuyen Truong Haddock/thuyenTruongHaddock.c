@@ -111,7 +111,7 @@ int contain_cycle(Graph *G)
 }
 int main()
 {
-    freopen("haddock.txt", "r", stdin);
+    freopen("haddock3.txt", "r", stdin);
     Graph G;
     int n, m, u, v, e;
     scanf("%d%d", &n, &m);
